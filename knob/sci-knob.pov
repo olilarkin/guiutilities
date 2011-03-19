@@ -25,9 +25,9 @@
 #declare DOTSIZE=0.05;
 #declare MODE=1; // 0 = dots, 1 =  lines
 
-//#declare SCITYPE=1; // 0 = black centre, silver pointer, 1 =  opposit
+//#declare SCITYPE=1; // 0 = black centre, silver pointer, 1 =	opposit
 
-#declare FUDGE_FACTOR=2.65; //  is a bodge! To be fixed
+#declare FUDGE_FACTOR=2.65; //	is a bodge! To be fixed
 
 #declare INCR= ((END_ANGLE - START_ANGLE)/NUMSTEPS+FUDGE_FACTOR); 
 
@@ -78,8 +78,8 @@ plane
 	texture 
 	{ 
 	pigment { color White  }
-    		#switch (Variant)
-    			#case (VARIANT_TEST)
+			#switch (Variant)
+				#case (VARIANT_TEST)
 			finish { ambient 0 diffuse 0.25 }
 			#break
 		#case (VARIANT_ALPHA)
@@ -91,12 +91,12 @@ plane
 		#case (VARIANT_SHADOW)
 			finish { ambient 0.05 diffuse 1.05 }
 			#break
-   		 #end
-   	 }
-   	 
-   	 #if (Variant = VARIANT_ALPHA)
-   	 no_image
- 	#end
+		 #end
+	 }
+	 
+	 #if (Variant = VARIANT_ALPHA)
+	 no_image
+	#end
 }
 
 
@@ -214,7 +214,7 @@ plane
 		0.06 // Radius 
 		texture 
 		{ 
-			pigment{ color Gray05}  
+			pigment{ color Gray05}	
 			
 			finish 
 			{ 
@@ -223,7 +223,7 @@ plane
 			diffuse 0.4 
 			} 
 		} 
-		rotate <0,0,( Count * ((360.)/30))>  
+		rotate <0,0,( Count * ((360.)/30))>	 
 		#if ((Variant = VARIANT_BKG) | (Variant = VARIANT_SHADOW))
 		no_image
 		#end
@@ -261,22 +261,22 @@ union
 
 	cone 
 	{
-	    <0, 0, -0.87>, 0.81   // Center and radius of one end
-	    <0, 0, -0.89>, 0.73    // Center and radius of other end
+		<0, 0, -0.87>, 0.81	  // Center and radius of one end
+		<0, 0, -0.89>, 0.73	   // Center and radius of other end
 	  }
 	  
-  	 texture
-    	{
-    		Chrome_Metal
-    		pigment{color Gray95}
-    		finish
-    		{ 
-    			ambient 0.1 
+	 texture
+		{
+			Chrome_Metal
+			pigment{color Gray95}
+			finish
+			{ 
+				ambient 0.1 
 			diffuse 0.1
-    			phong 0.1
-    			reflection 1
-    		}
-    	}
+				phong 0.1
+				reflection 1
+			}
+		}
 
 	#if ((Variant = VARIANT_BKG) | (Variant = VARIANT_SHADOW))
 	no_image
@@ -324,18 +324,18 @@ union
 		rotate <0,0,-START_ANGLE -( clock * (END_ANGLE - START_ANGLE))> 
 	}
 	
-  	 texture
-    	{
-    		Silver_Metal
-    		pigment{color White}
-    		finish
-    		{ 
-    			ambient 0.1 
+	 texture
+		{
+			Silver_Metal
+			pigment{color White}
+			finish
+			{ 
+				ambient 0.1 
 			diffuse 0.7
-    			phong 0.1
-    			reflection 1
-    		}
-    	}
+				phong 0.1
+				reflection 1
+			}
+		}
 
 	#if ((Variant = VARIANT_BKG) | (Variant = VARIANT_SHADOW))
 	no_image
