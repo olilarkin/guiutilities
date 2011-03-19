@@ -19,7 +19,7 @@
 #declare END_ANGLE = 150;
 #declare STARTVAL = 0;
 #declare NUMSTEPS = 11;
-#declare TEXTSIZE = 0.3;
+#declare TEXTSIZE = 0.4;
 #declare MARKLENGTH = 1.16;
 #declare TEXT_DIST=1.35;
 #declare DOTSIZE=0.05;
@@ -177,7 +177,7 @@ plane
 			pigment { color White  }
 			finish { ambient 1 } 
 		} 
-		scale <TEXTSIZE, TEXTSIZE ,1>
+		scale <TEXTSIZE, TEXTSIZE ,0.1>
 	} 
 	
 	#declare TextMin  = min_extent( mytext );

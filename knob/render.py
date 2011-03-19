@@ -41,7 +41,7 @@ def main():
 		sys.exit(1)
 	
 	if int(frms) < 10:
-		lz = ''
+		lz = '%01d'
 	elif int(frms) < 100:
 		lz = '%02d'
 	elif int(frms) < 1000:
