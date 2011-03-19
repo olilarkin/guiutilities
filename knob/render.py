@@ -21,7 +21,7 @@ def main():
 	p.add_option('--frames', '-f', default="10")
 	p.add_option('--scene', '-s', default="knob")
 	p.add_option('--rdim', '-r', default="300")
-	p.add_option('--odim', '-o', default="60")
+	p.add_option('--odim', '-o', default="48")
 	p.add_option('--tile', '-t', default="v")
 	p.add_option('--alpha', '-a', default="y")
 	#p.add_option('--height', '-h', default="100")
