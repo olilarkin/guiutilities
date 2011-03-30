@@ -12,7 +12,7 @@
 #declare VARIANT_SHADOW=3;	// shadow render (for shadow shape)
 
 #ifndef (Variant)
-	#declare Variant=VARIANT_TEST;
+	#declare Variant= VARIANT_TEST;
 #end
 
 #declare START_ANGLE = -150;
@@ -67,9 +67,10 @@ light_source
 
 light_source 
 { 
-	<50, 50, -50> 
+	<10, 10, -1> 
+//	area_light <15, 0, 0>, <0, 0, 15>, 5, 5 
 	color White
-	shadowless
+//	shadowless
 } 
 
 plane 
@@ -80,7 +81,7 @@ plane
 	pigment { color White  }
 			#switch (Variant)
 				#case (VARIANT_TEST)
-			finish { ambient 0 diffuse 0.25 }
+			finish { ambient 0 diffuse 0.08 }
 			#break
 		#case (VARIANT_ALPHA)
 			finish { ambient 0 diffuse 0.5 }
@@ -252,8 +253,8 @@ cylinder
 union
 {
 	// chrome ring
-	cylinder 
-	{ 
+	cylinder
+	{
 		<0, 0, 0>,// Center of one end 
 		<0, 0, -0.85>, // Center of other end 
 		0.81 // Radius
@@ -263,16 +264,16 @@ union
 	{
 		<0, 0, -0.87>, 0.81	  // Center and radius of one end
 		<0, 0, -0.89>, 0.73	   // Center and radius of other end
-	  }
-	  
-	 texture
+	}
+	
+	texture
 		{
 			Chrome_Metal
 			pigment{color Gray95}
 			finish
 			{ 
 				ambient 0.1 
-			diffuse 0.1
+				diffuse 0.1
 				phong 0.1
 				reflection 1
 			}
@@ -284,14 +285,14 @@ union
 }
 
 // inner knob
-cylinder 
-{ 
+cylinder
+{
 	<0, 0, 0>,// Center of one end 
 	<0, 0, -0.9>, // Center of other end 
 	0.73 // Radius 
 	
 	texture
-	{ 
+	{
 		pigment{ color Gray35} 
 		finish 
 		{ 
@@ -309,15 +310,15 @@ cylinder
 
 union
 {
-	cylinder 
-	{ 
+	cylinder
+	{
 		<0, 0, -0.95>,// Center of one end 
 		<0, 0, 0.>, // Center of other end 
 		0.06 // Radius 
 	}
 	// pointer line on knob 
-	box 
-	{ 
+	box
+	{
 		<-0.06, 0., -0.95>, // Near lower left corner 
 		< 0.06, 0.73, -0.95> // Far upper right corner
 		

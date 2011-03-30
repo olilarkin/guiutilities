@@ -6,7 +6,7 @@
 # transparent background thanks to Christoph Hormann's tutorial here http://www.imagico.de/pov/icons.html
 # example knob based on synthedit knob example by Jeff Mclintock
 
-# requires povray and imagemajick
+# requires povray and imagemagick
 # get them by installing macports http://www.macports.org/ and typing 
 # sudo port install ImageMagick
 # sudo port install povray
@@ -40,7 +40,9 @@ def main():
 		print "error: scene not found",
 		sys.exit(1)
 	
-	if int(frms) < 10:
+	if int(frms) == 1:
+		lz = ''
+	elif int(frms) < 10:
 		lz = '%01d'
 	elif int(frms) < 100:
 		lz = '%02d'
@@ -56,19 +58,19 @@ def main():
 		print "error: incorrect stitch option",
 		sys.exit(1)
 
-	#povray options supplied to all renders
-	popt = '-D -I' + scn + '.pov Width=' + options.rdim + ' Height=' + options.rdim + ' Antialias=On Initial_Frame=1 Final_Frame=' + frms + ' Initial_clock=0.0 Final_clock=1.0'
+	#povray options supplied to all renders	
+	popt = 'All_Console=Off All_File="false" Antialias=On Antialias_Depth=3 Antialias_Threshold=0.3 Bits_Per_Color=8 Bounding=On Bounding_Threshold=10 Continue_Trace=Off Create_Histogram=Off Debug_Console=On Debug_File="false" Display=Off Draw_Vistas=On End_Column=300 End_Row=300 Fatal_Console=On Fatal_File="false" Height=' + options.rdim + ' Input_File_Name=' +  scn + '.pov Jitter_Amount=1 Jitter=On Light_Buffer=On Output_File_Type=n Output_To_File=On Quality=9 Remove_Bounds=On Render_Console=On Render_File="false" Sampling_Method=1 Split_Unions=On Start_Column=1 Start_Row=1 Statistic_Console=On Statistic_File="false" Vista_Buffer=On Warning_Console=On Warning_File="false" Width=' + options.rdim + ' Initial_Frame=1 Final_Frame=' + frms + ' Initial_clock=0.0 Final_clock=1.0 '
 	
 	if options.alpha == 'y':
 		#render three times. once for alpha, once for background and once for shadow
-		os.system('povray ' + popt + ' DECLARE=Variant=1 -O' + scn + '-alpha-.png +ua')
-		os.system('povray ' + popt + ' DECLARE=Variant=2 -O' + scn + '-bg-.png')
-		os.system('povray ' + popt + ' DECLARE=Variant=3 -O' + scn + '-shadow-.png')
+		os.system('povray Output_Alpha=On DECLARE=Variant=1 ' + popt + 'Output_File_Name=' + scn + '-alpha.png') #Create_Ini=' + scn + '-alpha.ini'
+		os.system('povray Output_Alpha=Off DECLARE=Variant=2 ' + popt + 'Output_File_Name=' + scn + '-bg.png')
+		os.system('povray Output_Alpha=Off DECLARE=Variant=3 ' + popt + 'Output_File_Name=' + scn + '-shadow.png')
 	
 		#stitch the frames together vertically or horizontally
-		os.system('convert ' + scn + '-alpha-' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-alpha.png')
-		os.system('convert ' + scn + '-bg-' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-bg.png')
-		os.system('convert ' + scn + '-shadow-' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-shadow.png')
+		os.system('convert ' + scn + '-alpha' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-alpha.png')
+		os.system('convert ' + scn + '-bg' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-bg.png')
+		os.system('convert ' + scn + '-shadow' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-shadow.png')
 		
 		#split the background RGB channels to seperate files
 		os.system('convert -channel R -separate st-' + scn + '-bg.png st-' + scn + '-bg-red.png')
@@ -83,9 +85,9 @@ def main():
 		
 	elif options.alpha == 'n':
 		#render once
-		os.system('povray ' + popt + ' DECLARE=Variant=0 -O' + scn + '-.png +ua')
+		os.system('povray ' + popt + ' DECLARE=Variant=0 Output_File_Name=' + scn + '.png')
 		#stitch
-		os.system('convert ' + scn + '-' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' rendered-' + scn + '.png')
+		os.system('convert ' + scn + lz + '.png' + '[1-' + frms + '] ' + stitch + ' rendered-' + scn + '.png')
 	else:
 		print "error: bad alpha option",
 		sys.exit(1)
