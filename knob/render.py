@@ -68,9 +68,9 @@ def main():
 		os.system('povray Output_Alpha=Off DECLARE=Variant=3 ' + popt + 'Output_File_Name=' + scn + '-shadow.png')
 	
 		#stitch the frames together vertically or horizontally
-		os.system('convert ' + scn + '-alpha' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-alpha.png')
-		os.system('convert ' + scn + '-bg' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-bg.png')
-		os.system('convert ' + scn + '-shadow' + lz + '.png' + '[1-' + frms + '] ' + stitch + ' st-' + scn + '-shadow.png')
+		os.system('convert ' + scn + '-alpha*.png ' + stitch + ' st-' + scn + '-alpha.png')
+		os.system('convert ' + scn + '-bg*.png '  + stitch + ' st-' + scn + '-bg.png')
+		os.system('convert ' + scn + '-shadow*.png '  + stitch + ' st-' + scn + '-shadow.png')
 		
 		#split the background RGB channels to seperate files
 		os.system('convert -channel R -separate st-' + scn + '-bg.png st-' + scn + '-bg-red.png')
