@@ -59,7 +59,7 @@ def main():
 		sys.exit(1)
 
 	#povray options supplied to all renders	
-	popt = 'All_Console=Off All_File="false" Antialias=On Antialias_Depth=3 Antialias_Threshold=0.3 Bits_Per_Color=8 Bounding=On Bounding_Threshold=10 Continue_Trace=Off Create_Histogram=Off Debug_Console=On Debug_File="false" Display=Off Draw_Vistas=On End_Column=300 End_Row=300 Fatal_Console=On Fatal_File="false" Height=' + options.rdim + ' Input_File_Name=' +  scn + '.pov Jitter_Amount=1 Jitter=On Light_Buffer=On Output_File_Type=n Output_To_File=On Quality=9 Remove_Bounds=On Render_Console=On Render_File="false" Sampling_Method=1 Split_Unions=On Start_Column=1 Start_Row=1 Statistic_Console=On Statistic_File="false" Vista_Buffer=On Warning_Console=On Warning_File="false" Width=' + options.rdim + ' Initial_Frame=1 Final_Frame=' + frms + ' Initial_clock=0.0 Final_clock=1.0 '
+	popt = 'All_Console=Off All_File="false" Antialias=On Antialias_Depth=3 Antialias_Threshold=0.3 Bits_Per_Color=8 Bounding=On Bounding_Threshold=10 Continue_Trace=Off Debug_Console=On Debug_File="false" Display=Off Draw_Vistas=On End_Column=300 End_Row=300 Fatal_Console=On Fatal_File="false" Height=' + options.rdim + ' Input_File_Name=' +  scn + '.pov Jitter_Amount=1 Jitter=On Light_Buffer=On Output_File_Type=n Output_To_File=On Quality=9 Remove_Bounds=On Render_Console=On Render_File="false" Sampling_Method=1 Split_Unions=On Start_Column=1 Start_Row=1 Statistic_Console=On Statistic_File="false" Vista_Buffer=On Warning_Console=On Warning_File="false" Width=' + options.rdim + ' Initial_Frame=1 Final_Frame=' + frms + ' Initial_clock=0.0 Final_clock=1.0 '
 	
 	if options.alpha == 'y':
 		#render three times. once for alpha, once for background and once for shadow

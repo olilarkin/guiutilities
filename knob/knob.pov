@@ -1,3 +1,4 @@
+#version 3.6;
 #include "colors.inc" 
  
 #declare VARIANT_TEST=0; 
@@ -6,7 +7,7 @@
 #declare VARIANT_SHADOW=3;  // shadow render (for shadow shape)
 
 #ifndef (Variant)
-	#declare Variant=VARIANT_TEST;
+	#declare Variant= VARIANT_TEST;
 #end
 
 #declare TICKS = 20; 
