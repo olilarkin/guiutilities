@@ -78,10 +78,10 @@ def main():
 		os.system('convert -channel B -separate st-' + scn + '-bg.png st-' + scn + '-bg-blue.png')
 	
 		#join the backround's RGB channels with the shadow
-		os.system('convert -depth 8 -channel RGBA -combine st-' + scn + '-bg-red.png st-' + scn + '-bg-green.png st-' + scn + '-bg-blue.png st-' + scn + '-shadow.png st-' + scn + '-bg-tmp.png' )
+		os.system('convert -depth 8 -channel RGBA st-' + scn + '-bg-red.png st-' + scn + '-bg-green.png st-' + scn + '-bg-blue.png st-' + scn + '-shadow.png -negate -combine st-' + scn + '-bg-tmp.png' )
 		
 		#composite with the alpha channel
-		os.system('composite -depth 8 -compose over st-' + scn + '-alpha.png st-' + scn + '-bg-tmp.png rendered-' + scn + '.png')
+		os.system('composite -depth 8 -compose over st-' + scn + '-alpha.png -negate st-' + scn + '-bg-tmp.png rendered-' + scn + '.png')
 		
 	elif options.alpha == 'n':
 		#render once
