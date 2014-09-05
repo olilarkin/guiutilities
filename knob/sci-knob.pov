@@ -2,6 +2,7 @@
 // Oli Larkin 2011
 // www.olilarkin.co.uk
 
+#version 3.6
 
 #include "colors.inc" 
 #include "textures.inc"
