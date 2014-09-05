@@ -24,7 +24,6 @@ def main():
 	p.add_option('--odim', '-o', default="48")
 	p.add_option('--tile', '-t', default="v")
 	p.add_option('--alpha', '-a', default="y")
-	#p.add_option('--height', '-h', default="100")
 	options, arguments = p.parse_args()
 
 	scn = options.scene
@@ -59,7 +58,56 @@ def main():
 		sys.exit(1)
 
 	#povray options supplied to all renders	
-	popt = 'All_Console=Off All_File="false" Antialias=On Antialias_Depth=3 Antialias_Threshold=0.3 Bits_Per_Color=8 Bounding=On Bounding_Threshold=10 Continue_Trace=Off Create_Histogram=Off Debug_Console=On Debug_File="false" Display=Off Draw_Vistas=On End_Column=300 End_Row=300 Fatal_Console=On Fatal_File="false" Height=' + options.rdim + ' Input_File_Name=' +  scn + '.pov Jitter_Amount=1 Jitter=On Light_Buffer=On Output_File_Type=n Output_To_File=On Quality=9 Remove_Bounds=On Render_Console=On Render_File="false" Sampling_Method=1 Split_Unions=On Start_Column=1 Start_Row=1 Statistic_Console=On Statistic_File="false" Vista_Buffer=On Warning_Console=On Warning_File="false" Width=' + options.rdim + ' Initial_Frame=1 Final_Frame=' + frms + ' Initial_clock=0.0 Final_clock=1.0 '
+	popt = ""
+	popt += 'End_Column='
+	popt += options.rdim
+	popt += ' End_Row='
+	popt += options.rdim
+	popt += ' Height='
+	popt += options.rdim
+	popt += ' Width='
+	popt += options.rdim
+	popt += ' Input_File_Name='
+	popt += scn + '.pov '
+	popt += 'Final_Frame='
+	popt += frms
+	
+	popt += 'All_Console=Off '
+	popt += 'All_File="false" '
+	popt += 'Antialias=On '
+	popt += 'Antialias_Depth=5 '
+	popt += 'Antialias_Threshold=0.3 '
+	popt += 'Bits_Per_Color=8 '
+	popt += 'Bounding=On '
+	popt += 'Bounding_Threshold=10 '
+	popt += 'Continue_Trace=Off '
+	popt += 'Debug_Console=On '
+	popt += 'Debug_File="false" '
+	popt += 'Bounding=On '
+	popt += 'Bounding=On '
+	popt += 'Display=Off '
+	popt += 'Draw_Vistas=On '
+	popt += 'Fatal_Console=On '
+	popt += 'Fatal_File="false" '
+	popt += 'Jitter_Amount=1 '
+	popt += 'Jitter=On '
+	popt += 'Light_Buffer=On '
+	popt += 'Output_File_Type=n '
+	popt += 'Output_To_File=On '
+	popt += 'Quality=9 '
+	popt += 'Remove_Bounds=On '
+	popt += 'Render_Console=On '
+	popt += 'Render_File="false" '
+	popt += 'Sampling_Method=1 '
+	popt += 'Split_Unions=On '
+	popt += 'Statistic_Console=On '
+	popt += 'Statistic_File="false" '
+	popt += 'Vista_Buffer=On '
+	popt += 'Warning_Console=On '
+	popt += 'Warning_File="false" '
+	popt += 'Initial_Frame=1 '
+	popt += 'Initial_clock=0.0 '
+	popt += 'Final_clock=1.0 '
 	
 	if options.alpha == 'y':
 		#render three times. once for alpha, once for background and once for shadow
