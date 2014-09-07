@@ -1,18 +1,5 @@
 #!/usr/bin/env python
 
-# python shell script to help rendering transparent animation scenes for gui controls, using povray
-# Oli Larkin 2011-2014 http://www.olilarkin.co.uk
-# License: WTFPL http://sam.zoy.org/wtfpl/COPYING
-# transparent background thanks to Christoph Hormann's tutorial here http://www.imagico.de/pov/icons.html
-# example knob based on synthedit knob example by Jeff Mclintock
-
-# requires povray and imagemagick
-# tested with povray @3.7.0.0_1 / ImageMagick @6.8.9-7_0+x11 on OSX 10.9
-# get them by installing macports http://www.macports.org/ and typing 
-# sudo port install ImageMagick
-# sudo port install povray
-# you may also want to get megapov for mac, which seems to be the nicest editor
-
 import optparse, os, string, sys
 
 def main():
