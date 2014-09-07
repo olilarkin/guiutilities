@@ -1,4 +1,6 @@
-#version 3.6;
+
+#version 3.6
+
 #include "colors.inc" 
  
 #declare VARIANT_TEST=0; 

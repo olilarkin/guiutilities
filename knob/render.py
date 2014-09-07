@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 
 # python shell script to help rendering transparent animation scenes for gui controls, using povray
-# Oli Larkin 2011 http://www.olilarkin.co.uk
+# Oli Larkin 2011-2014 http://www.olilarkin.co.uk
 # License: WTFPL http://sam.zoy.org/wtfpl/COPYING
 # transparent background thanks to Christoph Hormann's tutorial here http://www.imagico.de/pov/icons.html
 # example knob based on synthedit knob example by Jeff Mclintock
 
 # requires povray and imagemagick
+# tested with povray @3.7.0.0_1 / ImageMagick @6.8.9-7_0+x11 on OSX 10.9
 # get them by installing macports http://www.macports.org/ and typing 
 # sudo port install ImageMagick
 # sudo port install povray
 # you may also want to get megapov for mac, which seems to be the nicest editor
-
-# tested on osx 10.6, may work on other *nix based systems
 
 import optparse, os, string, sys
 
@@ -24,7 +23,6 @@ def main():
 	p.add_option('--odim', '-o', default="48")
 	p.add_option('--tile', '-t', default="v")
 	p.add_option('--alpha', '-a', default="y")
-	#p.add_option('--height', '-h', default="100")
 	options, arguments = p.parse_args()
 
 	scn = options.scene
@@ -59,7 +57,56 @@ def main():
 		sys.exit(1)
 
 	#povray options supplied to all renders	
-	popt = 'All_Console=Off All_File="false" Antialias=On Antialias_Depth=3 Antialias_Threshold=0.3 Bits_Per_Color=8 Bounding=On Bounding_Threshold=10 Continue_Trace=Off Debug_Console=On Debug_File="false" Display=Off Draw_Vistas=On End_Column=300 End_Row=300 Fatal_Console=On Fatal_File="false" Height=' + options.rdim + ' Input_File_Name=' +  scn + '.pov Jitter_Amount=1 Jitter=On Light_Buffer=On Output_File_Type=n Output_To_File=On Quality=9 Remove_Bounds=On Render_Console=On Render_File="false" Sampling_Method=1 Split_Unions=On Start_Column=1 Start_Row=1 Statistic_Console=On Statistic_File="false" Vista_Buffer=On Warning_Console=On Warning_File="false" Width=' + options.rdim + ' Initial_Frame=1 Final_Frame=' + frms + ' Initial_clock=0.0 Final_clock=1.0 '
+	popt = ""
+	popt += 'End_Column='
+	popt += options.rdim
+	popt += ' End_Row='
+	popt += options.rdim
+	popt += ' Height='
+	popt += options.rdim
+	popt += ' Width='
+	popt += options.rdim
+	popt += ' Input_File_Name='
+	popt += scn + '.pov '
+	popt += 'Final_Frame='
+	popt += frms
+	
+	popt += 'All_Console=Off '
+	popt += 'All_File="false" '
+	popt += 'Antialias=On '
+	popt += 'Antialias_Depth=5 '
+	popt += 'Antialias_Threshold=0.3 '
+	popt += 'Bits_Per_Color=8 '
+	popt += 'Bounding=On '
+	popt += 'Bounding_Threshold=10 '
+	popt += 'Continue_Trace=Off '
+	popt += 'Debug_Console=On '
+	popt += 'Debug_File="false" '
+	popt += 'Bounding=On '
+	popt += 'Bounding=On '
+	popt += 'Display=Off '
+	popt += 'Draw_Vistas=On '
+	popt += 'Fatal_Console=On '
+	popt += 'Fatal_File="false" '
+	popt += 'Jitter_Amount=1 '
+	popt += 'Jitter=On '
+	popt += 'Light_Buffer=On '
+	popt += 'Output_File_Type=n '
+	popt += 'Output_To_File=On '
+	popt += 'Quality=9 '
+	popt += 'Remove_Bounds=On '
+	popt += 'Render_Console=On '
+	popt += 'Render_File="false" '
+	popt += 'Sampling_Method=1 '
+	popt += 'Split_Unions=On '
+	popt += 'Statistic_Console=On '
+	popt += 'Statistic_File="false" '
+	popt += 'Vista_Buffer=On '
+	popt += 'Warning_Console=On '
+	popt += 'Warning_File="false" '
+	popt += 'Initial_Frame=1 '
+	popt += 'Initial_clock=0.0 '
+	popt += 'Final_clock=1.0 '
 	
 	if options.alpha == 'y':
 		#render three times. once for alpha, once for background and once for shadow
@@ -78,10 +125,10 @@ def main():
 		os.system('convert -channel B -separate st-' + scn + '-bg.png st-' + scn + '-bg-blue.png')
 	
 		#join the backround's RGB channels with the shadow
-		os.system('convert -depth 8 -channel RGBA -combine st-' + scn + '-bg-red.png st-' + scn + '-bg-green.png st-' + scn + '-bg-blue.png st-' + scn + '-shadow.png st-' + scn + '-bg-tmp.png' )
+		os.system('convert -depth 8 -channel RGBA st-' + scn + '-bg-red.png st-' + scn + '-bg-green.png st-' + scn + '-bg-blue.png st-' + scn + '-shadow.png -negate -combine st-' + scn + '-bg-tmp.png' )
 		
 		#composite with the alpha channel
-		os.system('composite -depth 8 -compose over st-' + scn + '-alpha.png st-' + scn + '-bg-tmp.png rendered-' + scn + '.png')
+		os.system('composite -depth 8 -compose over st-' + scn + '-alpha.png -negate st-' + scn + '-bg-tmp.png rendered-' + scn + '.png')
 		
 	elif options.alpha == 'n':
 		#render once
@@ -95,6 +142,7 @@ def main():
 	#clean up (osx/linux only)
 	os.system('rm ' + scn + '*.png')
 	os.system('rm st-' + scn + '*.png')
+	os.system('rm false')
 
 	od = options.odim
 	oh = str(int(frms) * int(od))
