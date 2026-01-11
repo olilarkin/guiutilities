@@ -26,6 +26,12 @@ except ImportError:
     print("Documentation: https://mitsuba.readthedocs.io/")
     exit(1)
 
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
+    print("Note: Install Pillow for resizing: pip install pillow")
+
 # Try to use LLVM backend for CPU JIT compilation (fastest)
 # Falls back to scalar if LLVM not available
 try:
@@ -105,7 +111,7 @@ class ClassicKnob(KnobStyle):
                 'width': render_size,
                 'height': render_size,
                 'pixel_format': 'rgba',
-                'component_format': 'uint8',
+                'component_format': 'float32',
                 'rfilter': {'type': 'gaussian'}
             },
             'sampler': {
@@ -115,13 +121,15 @@ class ClassicKnob(KnobStyle):
         }
 
     def _build_lighting(self) -> dict:
+        """Rectangle area light for studio-style lighting."""
         return {
-            'type': 'envmap',
-            'bitmap': {
-                'type': 'bitmap',
-                'filename': 'studio_light.exr'
-            },
-            'scale': 1.5
+            'type': 'rectangle',
+            'to_world': mi.ScalarTransform4f.translate([2, 2, 5]) @
+                       mi.ScalarTransform4f.scale([3, 3, 1]),
+            'emitter': {
+                'type': 'area',
+                'radiance': {'type': 'rgb', 'value': [15, 15, 15]}
+            }
         }
 
     def _build_area_light(self) -> dict:
@@ -283,7 +291,7 @@ class SciKnob(KnobStyle):
                 'width': render_size,
                 'height': render_size,
                 'pixel_format': 'rgba',
-                'component_format': 'uint8',
+                'component_format': 'float32',
                 'rfilter': {'type': 'gaussian'}
             },
             'sampler': {
@@ -470,7 +478,7 @@ class ModernKnob(KnobStyle):
                 'width': render_size,
                 'height': render_size,
                 'pixel_format': 'rgba',
-                'component_format': 'uint8',
+                'component_format': 'float32',
                 'rfilter': {'type': 'gaussian'}
             },
             'sampler': {
@@ -564,7 +572,9 @@ def render_frame(style: KnobStyle, frame: int, total_frames: int, render_size: i
 
     # Convert to numpy array (0-255 range)
     bitmap = mi.Bitmap(image)
-    return np.array(bitmap)
+    frame = np.array(bitmap)
+    # Convert from float32 [0,1] to uint8 [0,255]
+    return np.clip(frame * 255, 0, 255).astype(np.uint8)
 
 
 def create_sprite_strip(frames: list, tile_direction: str) -> np.ndarray:
@@ -654,9 +664,6 @@ Available styles:
     # Resize if requested
     if not args.no_resize and args.output != args.render:
         print("Resizing...")
-        # Use Mitsuba's bitmap resampling
-        bitmap = mi.Bitmap(strip)
-
         if args.tile == 'v':
             new_height = args.output * args.frames
             new_width = args.output
@@ -664,9 +671,16 @@ Available styles:
             new_height = args.output
             new_width = args.output * args.frames
 
-        resized = bitmap.resample([new_width, new_height])
         resized_path = output_dir / f'{output_name}-{args.output}x{args.output}.png'
-        resized.write(str(resized_path))
+
+        if Image is not None:
+            # Use Pillow for high-quality resizing
+            img = Image.fromarray(strip)
+            resized = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            resized.save(str(resized_path))
+        else:
+            print("Warning: Pillow not installed, skipping resize")
+
         print(f"Saved: {resized_path}")
 
     print("\nDone!")

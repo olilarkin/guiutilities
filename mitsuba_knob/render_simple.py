@@ -70,7 +70,7 @@ def create_knob_scene(angle_deg: float, size: int = 256) -> dict:
                 'width': size,
                 'height': size,
                 'pixel_format': 'rgba',
-                'component_format': 'uint8',
+                'component_format': 'float32',
                 'rfilter': {'type': 'tent'}
             },
             'sampler': {
@@ -201,9 +201,11 @@ def render_frames(num_frames: int, render_size: int, output_size: int,
         scene = mi.load_dict(scene_dict)
         image = mi.render(scene)
 
-        # Convert to numpy
+        # Convert to numpy uint8 [0-255]
         bitmap = mi.Bitmap(image)
         frame = np.array(bitmap)
+        # Convert from float32 [0,1] to uint8 [0,255]
+        frame = np.clip(frame * 255, 0, 255).astype(np.uint8)
         frames.append(frame)
 
     print(f"  Rendered {num_frames} frames" + " " * 30)

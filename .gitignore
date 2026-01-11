@@ -3,4 +3,5 @@
 *.jpg
 .DS_Store
 mitsuba_knob/venv
-
+venv/
+.claude/
