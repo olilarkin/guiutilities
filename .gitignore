@@ -2,3 +2,5 @@
 *.ini
 *.jpg
 .DS_Store
+mitsuba_knob/venv
+
