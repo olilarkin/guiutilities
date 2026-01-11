@@ -43,8 +43,8 @@ def create_knob_scene(angle_deg: float, size: int = 256) -> dict:
     """
     angle_rad = math.radians(angle_deg)
 
-    # Pointer endpoint
-    pointer_len = 0.6
+    # Pointer endpoint (length should fit within knob radius)
+    pointer_len = 0.55
     px = pointer_len * math.sin(angle_rad)
     py = pointer_len * math.cos(angle_rad)
 
@@ -54,57 +54,47 @@ def create_knob_scene(angle_deg: float, size: int = 256) -> dict:
         # Path tracing integrator
         'integrator': {
             'type': 'path',
-            'max_depth': 4
+            'max_depth': 6
         },
 
         # Orthographic camera looking down at knob
         'sensor': {
             'type': 'orthographic',
             'to_world': mi.ScalarTransform4f.look_at(
-                origin=[0, 0, 3],
+                origin=[0, 0, 5],
                 target=[0, 0, 0],
                 up=[0, 1, 0]
-            ),
+            ) @ mi.ScalarTransform4f.scale([2.2, 2.2, 1]),
             'film': {
                 'type': 'hdrfilm',
                 'width': size,
                 'height': size,
-                'pixel_format': 'rgba',
+                'pixel_format': 'rgb',
                 'component_format': 'float32',
                 'rfilter': {'type': 'tent'}
             },
             'sampler': {
                 'type': 'independent',
-                'sample_count': 32
+                'sample_count': 64
             }
         },
 
-        # Simple area light
-        'light': {
+        # Single area light behind camera, centered
+        'key_light': {
             'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([1, 1, 4]) @
-                       mi.ScalarTransform4f.scale([3, 3, 1]),
+            'to_world': mi.ScalarTransform4f.translate([0, 0, 6]) @
+                       mi.ScalarTransform4f.rotate([1, 0, 0], 180) @
+                       mi.ScalarTransform4f.scale([4, 4, 1]),
             'emitter': {
                 'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [12, 12, 12]}
+                'radiance': {'type': 'rgb', 'value': [2, 2, 2]}
             }
         },
 
-        # Ambient/fill light
-        'ambient': {
-            'type': 'constant',
-            'radiance': {'type': 'rgb', 'value': [0.3, 0.3, 0.3]}
-        },
-
-        # Background plane
+        # Constant environment for background and ambient fill
         'background': {
-            'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([0, 0, -0.1]) @
-                       mi.ScalarTransform4f.scale([2, 2, 1]),
-            'bsdf': {
-                'type': 'diffuse',
-                'reflectance': {'type': 'rgb', 'value': [0.95, 0.95, 0.95]}
-            }
+            'type': 'constant',
+            'radiance': {'type': 'rgb', 'value': [0.7, 0.7, 0.7]}
         },
 
         # Knob body (dark cylinder)
@@ -112,10 +102,10 @@ def create_knob_scene(angle_deg: float, size: int = 256) -> dict:
             'type': 'cylinder',
             'p0': [0, 0, 0],
             'p1': [0, 0, 0.25],
-            'radius': 0.8,
+            'radius': 0.75,
             'bsdf': {
                 'type': 'plastic',
-                'diffuse_reflectance': {'type': 'rgb', 'value': [0.12, 0.12, 0.12]},
+                'diffuse_reflectance': {'type': 'rgb', 'value': [0.05, 0.05, 0.05]},
                 'int_ior': 1.5
             }
         },
@@ -124,10 +114,10 @@ def create_knob_scene(angle_deg: float, size: int = 256) -> dict:
         'knob_top': {
             'type': 'disk',
             'to_world': mi.ScalarTransform4f.translate([0, 0, 0.25]) @
-                       mi.ScalarTransform4f.scale([0.8, 0.8, 1]),
+                       mi.ScalarTransform4f.scale([0.75, 0.75, 1]),
             'bsdf': {
                 'type': 'plastic',
-                'diffuse_reflectance': {'type': 'rgb', 'value': [0.15, 0.15, 0.15]},
+                'diffuse_reflectance': {'type': 'rgb', 'value': [0.08, 0.08, 0.08]},
                 'int_ior': 1.5
             }
         },
@@ -140,7 +130,7 @@ def create_knob_scene(angle_deg: float, size: int = 256) -> dict:
             'radius': 0.04,
             'bsdf': {
                 'type': 'diffuse',
-                'reflectance': {'type': 'rgb', 'value': [0.9, 0.9, 0.9]}
+                'reflectance': {'type': 'rgb', 'value': [0.95, 0.95, 0.95]}
             }
         },
 
@@ -151,20 +141,20 @@ def create_knob_scene(angle_deg: float, size: int = 256) -> dict:
                        mi.ScalarTransform4f.scale([0.06, 0.06, 1]),
             'bsdf': {
                 'type': 'diffuse',
-                'reflectance': {'type': 'rgb', 'value': [0.9, 0.9, 0.9]}
+                'reflectance': {'type': 'rgb', 'value': [0.95, 0.95, 0.95]}
             }
         },
     }
 
-    # Add tick marks
+    # Add tick marks around the knob (dark marks on light background)
     num_ticks = 11
     start_angle = -135
     end_angle = 135
     for i in range(num_ticks):
         t = i / (num_ticks - 1)
         tick_angle = math.radians(start_angle + t * (end_angle - start_angle))
-        inner_r = 0.85
-        outer_r = 0.95
+        inner_r = 0.82
+        outer_r = 1.0
         x1 = inner_r * math.sin(tick_angle)
         y1 = inner_r * math.cos(tick_angle)
         x2 = outer_r * math.sin(tick_angle)
@@ -172,12 +162,12 @@ def create_knob_scene(angle_deg: float, size: int = 256) -> dict:
 
         scene[f'tick_{i}'] = {
             'type': 'cylinder',
-            'p0': [x1, y1, 0.01],
-            'p1': [x2, y2, 0.01],
-            'radius': 0.015,
+            'p0': [x1, y1, 0.15],
+            'p1': [x2, y2, 0.15],
+            'radius': 0.02,
             'bsdf': {
                 'type': 'diffuse',
-                'reflectance': {'type': 'rgb', 'value': [0.85, 0.85, 0.85]}
+                'reflectance': {'type': 'rgb', 'value': [0.1, 0.1, 0.1]}
             }
         }
 
@@ -201,11 +191,10 @@ def render_frames(num_frames: int, render_size: int, output_size: int,
         scene = mi.load_dict(scene_dict)
         image = mi.render(scene)
 
-        # Convert to numpy uint8 [0-255]
+        # Convert to numpy uint8 with proper sRGB gamma
         bitmap = mi.Bitmap(image)
+        bitmap = bitmap.convert(mi.Bitmap.PixelFormat.RGB, mi.Struct.Type.UInt8, srgb_gamma=True)
         frame = np.array(bitmap)
-        # Convert from float32 [0,1] to uint8 [0,255]
-        frame = np.clip(frame * 255, 0, 255).astype(np.uint8)
         frames.append(frame)
 
     print(f"  Rendered {num_frames} frames" + " " * 30)

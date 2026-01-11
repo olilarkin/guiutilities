@@ -128,7 +128,7 @@ class ClassicKnob(KnobStyle):
                        mi.ScalarTransform4f.scale([3, 3, 1]),
             'emitter': {
                 'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [15, 15, 15]}
+                'radiance': {'type': 'rgb', 'value': [40, 40, 40]}
             }
         }
 
@@ -140,7 +140,7 @@ class ClassicKnob(KnobStyle):
                        mi.ScalarTransform4f.scale([3, 3, 1]),
             'emitter': {
                 'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [15, 15, 15]}
+                'radiance': {'type': 'rgb', 'value': [40, 40, 40]}
             }
         }
 
@@ -308,7 +308,7 @@ class SciKnob(KnobStyle):
                        mi.ScalarTransform4f.scale([4, 4, 1]),
             'emitter': {
                 'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [20, 20, 20]}
+                'radiance': {'type': 'rgb', 'value': [60, 60, 60]}
             }
         }
 
@@ -319,7 +319,7 @@ class SciKnob(KnobStyle):
                        mi.ScalarTransform4f.scale([2, 2, 1]),
             'emitter': {
                 'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [8, 8, 8]}
+                'radiance': {'type': 'rgb', 'value': [25, 25, 25]}
             }
         }
 
@@ -490,7 +490,7 @@ class ModernKnob(KnobStyle):
     def _build_environment(self) -> dict:
         return {
             'type': 'constant',
-            'radiance': {'type': 'rgb', 'value': [0.8, 0.8, 0.8]}
+            'radiance': {'type': 'rgb', 'value': [2.0, 2.0, 2.0]}
         }
 
     def _build_background(self) -> dict:
