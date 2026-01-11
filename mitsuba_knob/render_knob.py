@@ -102,15 +102,15 @@ class ClassicKnob(KnobStyle):
         return {
             'type': 'orthographic',
             'to_world': mi.ScalarTransform4f.look_at(
-                origin=[0, 0, 2],
+                origin=[0, 0, 5],
                 target=[0, 0, 0],
                 up=[0, 1, 0]
-            ),
+            ) @ mi.ScalarTransform4f.scale([self.view_size, self.view_size, 1]),
             'film': {
                 'type': 'hdrfilm',
                 'width': render_size,
                 'height': render_size,
-                'pixel_format': 'rgba',
+                'pixel_format': 'rgb',
                 'component_format': 'float32',
                 'rfilter': {'type': 'gaussian'}
             },
@@ -121,37 +121,23 @@ class ClassicKnob(KnobStyle):
         }
 
     def _build_lighting(self) -> dict:
-        """Rectangle area light for studio-style lighting."""
+        """Area light behind camera, pointing at scene."""
         return {
             'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([2, 2, 5]) @
-                       mi.ScalarTransform4f.scale([3, 3, 1]),
+            'to_world': mi.ScalarTransform4f.translate([0, 0, 6]) @
+                       mi.ScalarTransform4f.rotate([1, 0, 0], 180) @
+                       mi.ScalarTransform4f.scale([4, 4, 1]),
             'emitter': {
                 'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [40, 40, 40]}
-            }
-        }
-
-    def _build_area_light(self) -> dict:
-        """Alternative: rectangle area light for studio-style lighting."""
-        return {
-            'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([2, 2, 5]) @
-                       mi.ScalarTransform4f.scale([3, 3, 1]),
-            'emitter': {
-                'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [40, 40, 40]}
+                'radiance': {'type': 'rgb', 'value': [2, 2, 2]}
             }
         }
 
     def _build_background(self) -> dict:
+        """Constant environment for uniform background."""
         return {
-            'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([0, 0, -0.1]) @
-                       mi.ScalarTransform4f.scale([self.view_size, self.view_size, 1]),
-            'bsdf': {
-                'type': 'diffuse',
-                'reflectance': {'type': 'rgb', 'value': [0.95, 0.95, 0.95]}
+            'type': 'constant',
+            'radiance': {'type': 'rgb', 'value': [0.7, 0.7, 0.7]
             }
         }
 
@@ -253,7 +239,6 @@ class SciKnob(KnobStyle):
             },
             'sensor': self._build_camera(render_size),
             'area_light': self._build_area_light(),
-            'fill_light': self._build_fill_light(),
             'background': self._build_background(),
         }
 
@@ -282,15 +267,15 @@ class SciKnob(KnobStyle):
         return {
             'type': 'orthographic',
             'to_world': mi.ScalarTransform4f.look_at(
-                origin=[0, 0, 2],
+                origin=[0, 0, 5],
                 target=[0, 0, 0],
                 up=[0, 1, 0]
-            ),
+            ) @ mi.ScalarTransform4f.scale([self.view_size, self.view_size, 1]),
             'film': {
                 'type': 'hdrfilm',
                 'width': render_size,
                 'height': render_size,
-                'pixel_format': 'rgba',
+                'pixel_format': 'rgb',
                 'component_format': 'float32',
                 'rfilter': {'type': 'gaussian'}
             },
@@ -303,35 +288,23 @@ class SciKnob(KnobStyle):
     def _build_area_light(self) -> dict:
         return {
             'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([-3, 3, 8]) @
-                       mi.ScalarTransform4f.rotate([1, 0, 0], 30) @
+            'to_world': mi.ScalarTransform4f.translate([0, 0, 6]) @
+                       mi.ScalarTransform4f.rotate([1, 0, 0], 180) @
                        mi.ScalarTransform4f.scale([4, 4, 1]),
             'emitter': {
                 'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [60, 60, 60]}
+                'radiance': {'type': 'rgb', 'value': [2.5, 2.5, 2.5]}
             }
         }
 
     def _build_fill_light(self) -> dict:
-        return {
-            'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([2, 2, 5]) @
-                       mi.ScalarTransform4f.scale([2, 2, 1]),
-            'emitter': {
-                'type': 'area',
-                'radiance': {'type': 'rgb', 'value': [25, 25, 25]}
-            }
-        }
+        # Not used - constant environment provides fill
+        return None
 
     def _build_background(self) -> dict:
         return {
-            'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([0, 0, -0.05]) @
-                       mi.ScalarTransform4f.scale([self.view_size, self.view_size, 1]),
-            'bsdf': {
-                'type': 'diffuse',
-                'reflectance': {'type': 'rgb', 'value': [0.98, 0.98, 0.98]}
-            }
+            'type': 'constant',
+            'radiance': {'type': 'rgb', 'value': [0.7, 0.7, 0.7]}
         }
 
     def _build_tick(self, tick_angle: float) -> dict:
@@ -345,12 +318,12 @@ class SciKnob(KnobStyle):
 
         return {
             'type': 'cylinder',
-            'p0': [x1, y1, 0],
-            'p1': [x2, y2, 0],
-            'radius': 0.015,
+            'p0': [x1, y1, 0.15],
+            'p1': [x2, y2, 0.15],
+            'radius': 0.02,
             'bsdf': {
                 'type': 'diffuse',
-                'reflectance': {'type': 'rgb', 'value': [0.95, 0.95, 0.95]}
+                'reflectance': {'type': 'rgb', 'value': [0.1, 0.1, 0.1]}
             }
         }
 
@@ -457,7 +430,7 @@ class ModernKnob(KnobStyle):
                 'max_depth': 8
             },
             'sensor': self._build_camera(render_size),
-            'envmap': self._build_environment(),
+            'light': self._build_lighting(),
             'background': self._build_background(),
             'knob_body': self._build_knob_body(),
             'knob_top': self._build_knob_top(),
@@ -469,15 +442,15 @@ class ModernKnob(KnobStyle):
         return {
             'type': 'orthographic',
             'to_world': mi.ScalarTransform4f.look_at(
-                origin=[0, 0, 2],
+                origin=[0, 0, 5],
                 target=[0, 0, 0],
                 up=[0, 1, 0]
-            ),
+            ) @ mi.ScalarTransform4f.scale([self.view_size, self.view_size, 1]),
             'film': {
                 'type': 'hdrfilm',
                 'width': render_size,
                 'height': render_size,
-                'pixel_format': 'rgba',
+                'pixel_format': 'rgb',
                 'component_format': 'float32',
                 'rfilter': {'type': 'gaussian'}
             },
@@ -487,21 +460,23 @@ class ModernKnob(KnobStyle):
             }
         }
 
-    def _build_environment(self) -> dict:
+    def _build_lighting(self) -> dict:
         return {
-            'type': 'constant',
-            'radiance': {'type': 'rgb', 'value': [2.0, 2.0, 2.0]}
+            'type': 'rectangle',
+            'to_world': mi.ScalarTransform4f.translate([0, 0, 6]) @
+                       mi.ScalarTransform4f.rotate([1, 0, 0], 180) @
+                       mi.ScalarTransform4f.scale([4, 4, 1]),
+            'emitter': {
+                'type': 'area',
+                'radiance': {'type': 'rgb', 'value': [2, 2, 2]}
+            }
         }
 
     def _build_background(self) -> dict:
+        # Dark background for modern style
         return {
-            'type': 'rectangle',
-            'to_world': mi.ScalarTransform4f.translate([0, 0, -0.05]) @
-                       mi.ScalarTransform4f.scale([self.view_size, self.view_size, 1]),
-            'bsdf': {
-                'type': 'diffuse',
-                'reflectance': {'type': 'rgb', 'value': [0.12, 0.12, 0.12]}
-            }
+            'type': 'constant',
+            'radiance': {'type': 'rgb', 'value': [0.15, 0.15, 0.15]}
         }
 
     def _build_knob_body(self) -> dict:
@@ -570,11 +545,10 @@ def render_frame(style: KnobStyle, frame: int, total_frames: int, render_size: i
     scene = mi.load_dict(scene_dict)
     image = mi.render(scene)
 
-    # Convert to numpy array (0-255 range)
+    # Convert to numpy uint8 with proper sRGB gamma
     bitmap = mi.Bitmap(image)
-    frame = np.array(bitmap)
-    # Convert from float32 [0,1] to uint8 [0,255]
-    return np.clip(frame * 255, 0, 255).astype(np.uint8)
+    bitmap = bitmap.convert(mi.Bitmap.PixelFormat.RGB, mi.Struct.Type.UInt8, srgb_gamma=True)
+    return np.array(bitmap)
 
 
 def create_sprite_strip(frames: list, tile_direction: str) -> np.ndarray:
